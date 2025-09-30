@@ -5,9 +5,9 @@ void main() {
   runApp(const MyApp());
 }
 
-// Define the complete custom theme in one place.
-final customTheme = CustomTheme(
-  colors: const CustomColors(
+// TODO 换一种方式存储custom theme
+final globalCTheme = CTheme(
+  colors: const CColors(
     primary: Colors.blue,
     onPrimary: Colors.white,
     success: Colors.green,
@@ -15,23 +15,23 @@ final customTheme = CustomTheme(
     background: Colors.white,
     foreground: Colors.black,
   ),
-  textStyles: const CustomTextStyles(
+  textStyles: const CTextStyles(
     heading: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
     body: TextStyle(fontSize: 16),
     caption: TextStyle(fontSize: 12),
   ),
-  radii: CustomRadii(
+  radii: CRadii(
     small: const Radius.circular(8.0),
     medium: const Radius.circular(12.0),
     large: const Radius.circular(24.0),
   ),
-  buttonStyles: CustomButtonStyles(
-    primary: CustomButtonStyle(
+  buttonStyles: CButtonStyles(
+    primary: CButtonStyle(
       backgroundColor: Colors.blue,
       foregroundColor: Colors.white,
       radius: const Radius.circular(8.0),
     ),
-    success: CustomButtonStyle(
+    success: CButtonStyle(
       backgroundColor: Colors.green,
       foregroundColor: Colors.white,
       radius: const Radius.circular(8.0),
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Custom UI Demo',
-      theme: customTheme.toMaterial(),
+      theme: globalCTheme.toMaterial(),
       home: const MyHomePage(),
     );
   }
@@ -71,19 +71,19 @@ class MyHomePage extends StatelessWidget {
             children: <Widget>[
               Text(
                 'textStyles.heading',
-                style: customTheme.textStyles.heading,
+                style: globalCTheme.textStyles.heading,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
                 'textStyles.body',
-                style: customTheme.textStyles.body,
+                style: globalCTheme.textStyles.body,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
                 'textStyles.caption',
-                style: customTheme.textStyles.caption,
+                style: globalCTheme.textStyles.caption,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
@@ -99,11 +99,11 @@ class MyHomePage extends StatelessWidget {
                     children: [
                       Text(
                         'Card with medium radius',
-                        style: customTheme.textStyles.heading,
+                        style: globalCTheme.textStyles.heading,
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
-                        style: customTheme.buttonStyles.success?.toMaterial(),
+                        style: globalCTheme.buttonStyles.success?.toMaterial(),
                         onPressed: () {},
                         child: const Text('Success'),
                       ),

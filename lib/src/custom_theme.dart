@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A set of custom colors designed based on scenarios and purposes.
-class CustomColors {
+class CColors {
   final Color primary;
   final Color onPrimary;
   final Color success;
@@ -9,7 +9,7 @@ class CustomColors {
   final Color background;
   final Color foreground;
 
-  const CustomColors({
+  const CColors({
     required this.primary,
     required this.onPrimary,
     required this.success,
@@ -20,12 +20,12 @@ class CustomColors {
 }
 
 /// A set of custom button styles for different button types.
-class CustomButtonStyle {
+class CButtonStyle {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Radius? radius;
 
-  const CustomButtonStyle({
+  const CButtonStyle({
     this.backgroundColor,
     this.foregroundColor,
     this.radius,
@@ -45,7 +45,7 @@ class CustomButtonStyle {
   }
 
   /// Creates a `CustomButtonStyle` instance from a Material `ButtonStyle`.
-  factory CustomButtonStyle.fromMaterial(ButtonStyle? materialStyle) {
+  factory CButtonStyle.fromMaterial(ButtonStyle? materialStyle) {
     final backgroundColor = materialStyle?.backgroundColor?.resolve({});
     final foregroundColor = materialStyle?.foregroundColor?.resolve({});
     Radius? radius;
@@ -57,7 +57,7 @@ class CustomButtonStyle {
       }
     }
 
-    return CustomButtonStyle(
+    return CButtonStyle(
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
       radius: radius,
@@ -65,23 +65,23 @@ class CustomButtonStyle {
   }
 }
 
-class CustomButtonStyles {
-  final CustomButtonStyle primary;
-  final CustomButtonStyle? success;
+class CButtonStyles {
+  final CButtonStyle primary;
+  final CButtonStyle? success;
 
-  const CustomButtonStyles({
+  const CButtonStyles({
     required this.primary,
     this.success,
   });
 }
 
 /// A set of custom text styles for different content types.
-class CustomTextStyles {
+class CTextStyles {
   final TextStyle heading;
   final TextStyle body;
   final TextStyle caption;
 
-  const CustomTextStyles({
+  const CTextStyles({
     required this.heading,
     required this.body,
     required this.caption,
@@ -89,12 +89,12 @@ class CustomTextStyles {
 }
 
 /// A set of custom border radii for UI elements.
-class CustomRadii {
+class CRadii {
   final Radius small;
   final Radius medium;
   final Radius large;
 
-  const CustomRadii({
+  const CRadii({
     required this.small,
     required this.medium,
     required this.large,
@@ -106,13 +106,13 @@ class CustomRadii {
 /// This theme is structured based on a custom design philosophy, focusing on
 /// properties like colors, text styles, and border radii. It provides methods
 /// to convert to and from Material Design's `ThemeData`.
-class CustomTheme {
-  final CustomColors colors;
-  final CustomTextStyles textStyles;
-  final CustomRadii radii;
-  final CustomButtonStyles buttonStyles;
+class CTheme {
+  final CColors colors;
+  final CTextStyles textStyles;
+  final CRadii radii;
+  final CButtonStyles buttonStyles;
 
-  const CustomTheme({
+  const CTheme({
     required this.colors,
     required this.textStyles,
     required this.radii,
@@ -123,9 +123,9 @@ class CustomTheme {
   ///
   /// This allows for interoperability, adapting a standard Material theme
   /// to the custom theme structure.
-  factory CustomTheme.fromMaterial(ThemeData materialTheme) {
-    return CustomTheme(
-      colors: CustomColors(
+  factory CTheme.fromMaterial(ThemeData materialTheme) {
+    return CTheme(
+      colors: CColors(
         primary: materialTheme.colorScheme.primary,
         onPrimary: materialTheme.colorScheme.onPrimary,
         success: materialTheme.colorScheme.secondary,
@@ -133,21 +133,21 @@ class CustomTheme {
         background: materialTheme.colorScheme.surface,
         foreground: materialTheme.colorScheme.onSurface,
       ),
-      textStyles: CustomTextStyles(
+      textStyles: CTextStyles(
         heading: materialTheme.textTheme.headlineMedium!,
         body: materialTheme.textTheme.bodyMedium!,
         caption: materialTheme.textTheme.bodySmall!,
       ),
-      radii: CustomRadii(
+      radii: CRadii(
         small: const Radius.circular(4.0), // Simplified from theme
         medium: const Radius.circular(8.0),
         large: const Radius.circular(16.0),
       ),
-      buttonStyles: CustomButtonStyles(
-        primary: CustomButtonStyle.fromMaterial(
+      buttonStyles: CButtonStyles(
+        primary: CButtonStyle.fromMaterial(
           materialTheme.elevatedButtonTheme.style,
         ),
-        success: CustomButtonStyle(
+        success: CButtonStyle(
           backgroundColor: materialTheme.colorScheme.secondary,
           foregroundColor: materialTheme.colorScheme.onSecondary,
         ),
