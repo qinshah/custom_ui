@@ -5,6 +5,40 @@ void main() {
   runApp(const MyApp());
 }
 
+// Define the complete custom theme in one place.
+final customTheme = CustomTheme(
+  colors: const CustomColors(
+    primary: Colors.blue,
+    onPrimary: Colors.white,
+    success: Colors.green,
+    failure: Colors.red,
+    background: Colors.white,
+    foreground: Colors.black,
+  ),
+  textStyles: const CustomTextStyles(
+    heading: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    body: TextStyle(fontSize: 16),
+    caption: TextStyle(fontSize: 12),
+  ),
+  radii: CustomRadii(
+    small: const Radius.circular(8.0),
+    medium: const Radius.circular(12.0),
+    large: const Radius.circular(24.0),
+  ),
+  buttonStyles: CustomButtonStyles(
+    primary: CustomButtonStyle(
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+      radius: const Radius.circular(8.0),
+    ),
+    success: CustomButtonStyle(
+      backgroundColor: Colors.green,
+      foregroundColor: Colors.white,
+      radius: const Radius.circular(8.0),
+    ),
+  ),
+);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -12,27 +46,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Custom UI Demo',
-      // Apply the custom theme by converting it to a Material theme.
-      theme: CustomTheme(
-        colors: const CustomColors(
-          primary: Colors.blue,
-          onPrimary: Colors.white,
-          success: Colors.green,
-          failure: Colors.red,
-          background: Colors.white,
-          foreground: Colors.black,
-        ),
-        textStyles: const CustomTextStyles(
-          heading: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          body: TextStyle(fontSize: 16),
-          caption: TextStyle(fontSize: 12),
-        ),
-        radii: CustomRadii(
-          small: const Radius.circular(8.0),
-          medium: const Radius.circular(12.0),
-          large: const Radius.circular(24.0),
-        ),
-      ).toMaterialTheme(),
+      theme: customTheme.toMaterial(),
       home: const MyHomePage(),
     );
   }
@@ -43,7 +57,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final customTheme = CustomTheme.fromMaterialTheme(Theme.of(context));
 
     return Scaffold(
       appBar: AppBar(
@@ -90,9 +103,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: customTheme.colors.success,
-                        ),
+                        style: customTheme.buttonStyles.success?.toMaterial(),
                         onPressed: () {},
                         child: const Text('Success'),
                       ),

@@ -19,6 +19,62 @@ class CustomColors {
   });
 }
 
+/// A set of custom button styles for different button types.
+class CustomButtonStyle {
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final Radius? radius;
+
+  const CustomButtonStyle({
+    this.backgroundColor,
+    this.foregroundColor,
+    this.radius,
+  });
+
+  /// Converts this `CustomButtonStyle` to a Material `ButtonStyle` object.
+  ButtonStyle toMaterial() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      shape: radius != null
+          ? RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(radius!),
+            )
+          : null,
+    );
+  }
+
+  /// Creates a `CustomButtonStyle` instance from a Material `ButtonStyle`.
+  factory CustomButtonStyle.fromMaterial(ButtonStyle? materialStyle) {
+    final backgroundColor = materialStyle?.backgroundColor?.resolve({});
+    final foregroundColor = materialStyle?.foregroundColor?.resolve({});
+    Radius? radius;
+    final shape = materialStyle?.shape?.resolve({});
+    if (shape is RoundedRectangleBorder) {
+      final borderRadius = shape.borderRadius;
+      if (borderRadius is BorderRadius) {
+        radius = borderRadius.topLeft;
+      }
+    }
+
+    return CustomButtonStyle(
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      radius: radius,
+    );
+  }
+}
+
+class CustomButtonStyles {
+  final CustomButtonStyle primary;
+  final CustomButtonStyle? success;
+
+  const CustomButtonStyles({
+    required this.primary,
+    this.success,
+  });
+}
+
 /// A set of custom text styles for different content types.
 class CustomTextStyles {
   final TextStyle heading;
@@ -54,37 +110,47 @@ class CustomTheme {
   final CustomColors colors;
   final CustomTextStyles textStyles;
   final CustomRadii radii;
+  final CustomButtonStyles buttonStyles;
 
   const CustomTheme({
     required this.colors,
     required this.textStyles,
     required this.radii,
+    required this.buttonStyles,
   });
 
   /// Creates a `CustomTheme` instance from a Material `ThemeData`.
   ///
   /// This allows for interoperability, adapting a standard Material theme
   /// to the custom theme structure.
-  factory CustomTheme.fromMaterialTheme(ThemeData materialTheme) {
+  factory CustomTheme.fromMaterial(ThemeData materialTheme) {
     return CustomTheme(
       colors: CustomColors(
         primary: materialTheme.colorScheme.primary,
         onPrimary: materialTheme.colorScheme.onPrimary,
-        success: Colors.green, // ThemeData doesn't have a direct 'success' color.
+        success: materialTheme.colorScheme.secondary,
         failure: materialTheme.colorScheme.error,
-        background: materialTheme.colorScheme.background,
-        foreground: materialTheme.colorScheme.onBackground,
+        background: materialTheme.colorScheme.surface,
+        foreground: materialTheme.colorScheme.onSurface,
       ),
       textStyles: CustomTextStyles(
         heading: materialTheme.textTheme.headlineMedium!,
         body: materialTheme.textTheme.bodyMedium!,
         caption: materialTheme.textTheme.bodySmall!,
       ),
-      // Radii don't have a direct mapping, so we use default values.
       radii: CustomRadii(
-        small: const Radius.circular(4.0),
+        small: const Radius.circular(4.0), // Simplified from theme
         medium: const Radius.circular(8.0),
         large: const Radius.circular(16.0),
+      ),
+      buttonStyles: CustomButtonStyles(
+        primary: CustomButtonStyle.fromMaterial(
+          materialTheme.elevatedButtonTheme.style,
+        ),
+        success: CustomButtonStyle(
+          backgroundColor: materialTheme.colorScheme.secondary,
+          foregroundColor: materialTheme.colorScheme.onSecondary,
+        ),
       ),
     );
   }
@@ -92,27 +158,27 @@ class CustomTheme {
   /// Converts this `CustomTheme` to a Material `ThemeData` object.
   ///
   /// This enables the custom theme to be applied to a `MaterialApp`.
-  ThemeData toMaterialTheme() {
-    final colorScheme = ColorScheme(
-      primary: colors.primary,
-      onPrimary: colors.onPrimary,
-      secondary: colors.success, // Map success color to secondary
-      onSecondary: Colors.white, // Assuming white text on success color
-      surface: colors.background,
-      background: colors.background,
-      error: colors.failure,
-      onSurface: colors.foreground,
-      onBackground: colors.foreground,
-      onError: Colors.white, // Common practice for text on error colors
-      brightness: ThemeData.estimateBrightnessForColor(colors.background),
-    );
-
+  ThemeData toMaterial() {
     return ThemeData(
-      colorScheme: colorScheme,
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
+      colorScheme: ColorScheme(
+        primary: colors.primary,
+        onPrimary: colors.onPrimary,
+        secondary: colors.success,
+        onSecondary: Colors.white,
+        surface: colors.background,
+        error: colors.failure,
+        onError: colors.failure,
+        onSurface: colors.foreground,
+        brightness: ThemeData.estimateBrightnessForColor(colors.background),
+      ),
       textTheme: TextTheme(
         headlineMedium: textStyles.heading.copyWith(color: colors.foreground),
-        bodyMedium: textStyles.body.copyWith(color: colors.foreground.withOpacity(0.87)),
-        bodySmall: textStyles.caption.copyWith(color: colors.foreground.withOpacity(0.6)),
+        bodyMedium:
+            textStyles.body.copyWith(color: colors.foreground.withAlpha(220)),
+        bodySmall: textStyles.caption
+            .copyWith(color: colors.foreground.withAlpha(150)),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: colors.primary,
@@ -125,13 +191,7 @@ class CustomTheme {
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: colors.primary,
-          foregroundColor: colors.onPrimary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(radii.small),
-          ),
-        ),
+        style: buttonStyles.primary.toMaterial(),
       ),
     );
   }
