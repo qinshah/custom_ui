@@ -1,6 +1,6 @@
-import 'package:example/basic/button_page.dart';
-import 'package:example/common/data_model/page_model.dart';
-import 'package:example/home/category_widget.dart';
+import 'package:custom_ui_example/basic/button_page.dart';
+import 'package:custom_ui_example/common/data_model/page_model.dart';
+import 'package:custom_ui_example/home/category_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

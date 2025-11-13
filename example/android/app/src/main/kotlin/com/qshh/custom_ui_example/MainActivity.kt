@@ -1,4 +1,4 @@
-package com.qshh.example
+package com.qshh.custom_ui_example
 
 import io.flutter.embedding.android.FlutterActivity
 

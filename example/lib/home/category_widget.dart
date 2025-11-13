@@ -1,5 +1,5 @@
-import 'package:example/common/context_extension.dart';
-import 'package:example/common/data_model/page_model.dart';
+import 'package:custom_ui_example/common/context_extension.dart';
+import 'package:custom_ui_example/common/data_model/page_model.dart';
 import 'package:flutter/material.dart';
 
 class CategoryWidget extends StatelessWidget {
