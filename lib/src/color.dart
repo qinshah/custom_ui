@@ -1,5 +1,16 @@
 import 'package:flutter/painting.dart';
 
+extension ColorExtension on Color {
+  Color darken([double amount = 0.1]) {
+    assert(amount >= 0 && amount <= 1);
+    final hsl = HSLColor.fromColor(this);
+    final darkened =
+        hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+
+    return darkened.toColor();
+  }
+}
+
 class CColor extends ColorSwatch<int> {
   /// Creates a color swatch with a variety of shades.
   ///
@@ -38,7 +49,6 @@ class CColor extends ColorSwatch<int> {
 
   /// The darkest shade.
   Color get shade900 => this[900]!;
-
 
   /// Completely invisible.
   static const Color transparent = Color(0x00000000);
@@ -1010,7 +1020,8 @@ class CColor extends ColorSwatch<int> {
     100: Color(0xFFF5F5F5),
     200: Color(0xFFEEEEEE),
     300: Color(0xFFE0E0E0),
-    350: Color(0xFFD6D6D6), // only for raised button while pressed in light theme
+    350: Color(
+        0xFFD6D6D6), // only for raised button while pressed in light theme
     400: Color(0xFFBDBDBD),
     500: Color(_greyPrimaryValue),
     600: Color(0xFF757575),

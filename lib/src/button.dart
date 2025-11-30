@@ -1,4 +1,5 @@
 import 'package:custom_ui/custom_ui.dart';
+import 'package:custom_ui/src/color.dart';
 import 'package:flutter/material.dart';
 
 class CButton extends StatefulWidget {
@@ -50,15 +51,18 @@ class CButton extends StatefulWidget {
 }
 
 class _CButtonState extends State<CButton> {
+  bool _tapping = false;
+
   @override
   Widget build(BuildContext context) {
-    final theme = CTheme.of(context);
-    final color = widget.color ?? theme.colorByType(widget.type);
+    final color = widget.color ?? CTheme.of(context).colorByType(widget.type);
     final childColor =
         color.computeLuminance() > 0.5 || color == Colors.transparent
             ? Colors.black
             : Colors.white;
     return GestureDetector(
+      onPanDown: (details) => setState(() => _tapping = true),
+      onPanEnd: (details) => setState(() => _tapping = false),
       behavior: HitTestBehavior.opaque,
       onTap: widget.onTap,
       onTapDown: widget.onTapDown,
@@ -76,16 +80,15 @@ class _CButtonState extends State<CButton> {
           style: TextStyle(color: childColor),
           child: IconTheme(
             data: IconThemeData(color: childColor),
-            child: DecoratedBox(
+            child: AnimatedContainer(
+              padding: widget.padding,
               decoration: BoxDecoration(
-                color: color,
+                color: _tapping ? color.darken() : color,
                 borderRadius: widget.borderRadius,
                 border: widget.border,
               ),
-              child: Padding(
-                padding: widget.padding,
-                child: widget.child,
-              ),
+              duration: Duration(milliseconds: 150), // TODO: 自定义动画时长
+              child: widget.child,
             ),
           ),
         ),
