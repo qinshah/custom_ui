@@ -8,7 +8,7 @@ class CButton extends StatefulWidget {
     this.child = const Text('CButton'),
     this.type = CColorType.normal,
     this.color,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.padding = const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
     this.border,
     this.onTap,
