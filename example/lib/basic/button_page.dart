@@ -13,7 +13,13 @@ class ButtonPage extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         children: [
           Text('默认文本'),
-          Center(child: CButton(child: Text('默认文本'))),
+          CButton(child: Text('默认文本')),
+          SizedBox(height: 16),
+          Text('居中按钮文本'),
+          CButton(child: Center(child: Text('居中按钮文本'))),
+          SizedBox(height: 16),
+          Text('居中按钮'),
+          Center(child: CButton(child: Text('居中按钮'))),
           SizedBox(height: 16),
           Text('指定类型'),
           Wrap(
@@ -82,8 +88,15 @@ class _CustomPanelState extends State<_CustomPanel> {
   double _vPadding = 8;
   double _hPadding = 16;
   double _radius = 8;
+  bool _enableBorder = false;
   double _borderWidth = 1;
-  Color _borderColor = Colors.transparent;
+  Color _borderColor = Colors.red;
+
+  @override
+  void dispose() {
+    _textCntlr.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +111,9 @@ class _CustomPanelState extends State<_CustomPanel> {
             color: _color,
             type: _type,
             borderRadius: BorderRadius.circular(_radius),
-            border: Border.all(width: _borderWidth, color: _borderColor),
+            border: _enableBorder
+                ? Border.all(width: _borderWidth, color: _borderColor)
+                : null,
             child: _iconChild
                 ? FlutterLogo(
                     size: _iconSize,
@@ -224,55 +239,17 @@ class _CustomPanelState extends State<_CustomPanel> {
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children:
-                    [Colors.transparent, ...Colors.primaries, Colors.white].map((color) {
+                children: [Colors.white, ...Colors.primaries].map((color) {
                   final isSelected = _color == color;
                   return GestureDetector(
                     onTap: () => setState(() => _color = color),
                     child: Container(
                       width: 30,
                       height: 30,
-                      decoration:
-                          BoxDecoration(shape: BoxShape.circle, color: color),
-                      child: isSelected ? Icon(Icons.check) : null,
-                    ),
-                  );
-                }).toList(),
-              ),
-            )
-          ],
-        ),
-        Row(children: [
-          Text('边框粗细'),
-          Expanded(
-            child: Slider(
-              min: 0,
-              max: 5,
-              value: _borderWidth,
-              onChanged: (double value) => setState(() => _borderWidth = value),
-            ),
-          )
-        ]),
-        Row(
-          children: [
-            Text('边框颜色:'),
-            Expanded(
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children:
-                    [Colors.transparent, ...Colors.primaries].map((color) {
-                  final isSelected = _borderColor == color;
-                  return GestureDetector(
-                    onTap: () => setState(() {
-                      _borderColor = color;
-                    }),
-                    child: Container(
-                      width: 32,
-                      height: 32,
                       decoration: BoxDecoration(
-                        color: color,
                         shape: BoxShape.circle,
+                        color: color,
+                        border: Border.all(),
                       ),
                       child: isSelected ? Icon(Icons.check) : null,
                     ),
@@ -282,6 +259,66 @@ class _CustomPanelState extends State<_CustomPanel> {
             )
           ],
         ),
+        SizedBox(height: 8),
+        Row(children: [
+          Text('边框:'),
+          Expanded(
+            child: CupertinoSlidingSegmentedControl(
+              children: {
+                false: Text('禁用'),
+                true: Text('启用'),
+              },
+              onValueChanged: (value) {
+                if (value == null) return;
+                setState(() => _enableBorder = value);
+              },
+              groupValue: _enableBorder,
+            ),
+          ),
+        ]),
+        if (_enableBorder) ...[
+          Row(children: [
+            Text('边框粗细'),
+            Expanded(
+              child: Slider(
+                min: 0,
+                max: 5,
+                value: _borderWidth,
+                onChanged: (double value) =>
+                    setState(() => _borderWidth = value),
+              ),
+            )
+          ]),
+          Row(
+            children: [
+              Text('边框颜色:'),
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [Colors.white, ...Colors.primaries].map((color) {
+                    final isSelected = _borderColor == color;
+                    return GestureDetector(
+                      onTap: () => setState(() {
+                        _borderColor = color;
+                      }),
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: color,
+                          border: Border.all(),
+                        ),
+                        child: isSelected ? Icon(Icons.check) : null,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+            ],
+          ),
+        ]
       ],
     );
   }

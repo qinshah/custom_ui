@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Custom UI'),),
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: [

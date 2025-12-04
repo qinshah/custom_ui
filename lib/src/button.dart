@@ -10,7 +10,7 @@ class CButton extends StatefulWidget {
     this.color,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
-    this.border = const Border(),
+    this.border,
     this.onTap,
     this.onTapDown,
     this.onTapUp,
@@ -33,7 +33,7 @@ class CButton extends StatefulWidget {
 
   final BorderRadiusGeometry borderRadius;
 
-  final BoxBorder border;
+  final BoxBorder? border;
 
   final GestureTapCallback? onTap;
   final GestureTapDownCallback? onTapDown;
@@ -61,8 +61,9 @@ class _CButtonState extends State<CButton> {
             ? Colors.black
             : Colors.white;
     return GestureDetector(
-      onPanDown: (details) => setState(() => _tapping = true),
-      onPanEnd: (details) => setState(() => _tapping = false),
+      onPanDown: (_) => setState(() => _tapping = true),
+      onPanEnd: (_) => setState(() => _tapping = false),
+      onPanCancel: () => setState(() => _tapping = false),
       behavior: HitTestBehavior.opaque,
       onTap: widget.onTap,
       onTapDown: widget.onTapDown,
